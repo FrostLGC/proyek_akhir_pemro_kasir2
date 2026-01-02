@@ -39,7 +39,7 @@ $pesanan = mysqli_query($conn,
 <body>
 
 <header>
-  <h2>Cafe AHMF - Dapur</h2>
+  <h2>Pesanan Masuk Dapur</h2>
   <nav>
     <a href="dashboard.php">Dashboard</a>
     <a href="logout.php">Logout</a>
@@ -49,35 +49,61 @@ $pesanan = mysqli_query($conn,
 <main>
 
 <h2>Pesanan Masuk Dapur</h2>
-
 <table>
-<tr>
-  <th>Kode</th>
-  <th>Nama</th>
-  <th>Meja</th>
-  <th>Status</th>
-  <th>Detail</th>
-  <th>Aksi</th>
-</tr>
+  <thead>
+    <tr>
+      <th>Kode</th>
+      <th>Nama</th>
+      <th>Meja</th>
+      <th>Status</th>
+      <th>Detail</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody id="dapur-body">
+    <script>
+async function loadDapur() {
+  try {
+    const res = await fetch('../api/dapur_api.php');
+    const data = await res.json();
 
-<?php while($p = mysqli_fetch_assoc($pesanan)){ ?>
-<tr>
-  <td><?php echo $p['kode']; ?></td>
-  <td><?php echo htmlspecialchars($p['nama_pemesan']); ?></td>
-  <td><?php echo $p['meja'] ?: '-'; ?></td>
-  <td><?php echo ucfirst($p['status']); ?></td>
-  <td><a href="detail_pesanan.php?id=<?php echo $p['id']; ?>">Lihat</a></td>
-  <td>
-    <?php if ($p['status'] === 'menunggu'): ?>
-      <a class="btn" href="?id=<?php echo $p['id']; ?>&aksi=proses">Proses</a>
-    <?php elseif ($p['status'] === 'diproses'): ?>
-      <a class="btn" href="?id=<?php echo $p['id']; ?>&aksi=selesai">Selesai</a>
-    <?php endif; ?>
-  </td>
-</tr>
-<?php } ?>
+    const tbody = document.getElementById('dapur-body');
+    tbody.innerHTML = '';
 
+    data.forEach(p => {
+      let aksi = '';
+      if (p.status === 'menunggu') {
+        aksi = `<a class="btn" href="?id=${p.id}&aksi=proses">Proses</a>`;
+      } else if (p.status === 'diproses') {
+        aksi = `<a class="btn" href="?id=${p.id}&aksi=selesai">Selesai</a>`;
+      }
+
+      tbody.innerHTML += `
+        <tr>
+          <td>${p.kode}</td>
+          <td>${p.nama_pemesan}</td>
+          <td>${p.meja ?? '-'}</td>
+          <td>${p.status}</td>
+          <td><a href="detail_pesanan.php?id=${p.id}">Lihat</a></td>
+          <td>${aksi}</td>
+        </tr>
+      `;
+    });
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// load pertama
+loadDapur();
+
+// polling tiap 12 detik
+setInterval(loadDapur, 12000);
+</script>
+  </tbody>
 </table>
+
 
 </main>
 </body>

@@ -33,31 +33,63 @@ $p = mysqli_query($conn, "SELECT * FROM pesanan ORDER BY created_at DESC");
 <h3>Daftar Pesanan</h3>
 
 <table>
-<tr>
-  <th>Kode</th>
-  <th>Nama</th>
-  <th>Total</th>
-  <th>Status</th>
-  <th>Aksi</th>
-</tr>
+  <thead>
+    <tr>
+      <th>Kode</th>
+      <th>Nama</th>
+      <th>Total</th>
+      <th>Status</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody id="pesanan-body">
+    <script>
+async function loadPesanan() {
+  try {
+    const res = await fetch('../api/pesanan_api.php');
+    const data = await res.json();
 
-<?php while($r = mysqli_fetch_assoc($p)){ ?>
-<tr>
-  <td><?php echo $r['kode']; ?></td>
-  <td><?php echo htmlspecialchars($r['nama_pemesan']); ?></td>
-  <td>Rp <?php echo number_format($r['total_harga']); ?></td>
-  <td><?php echo ucfirst($r['status']); ?></td>
-  <td>
-    <a href="detail_pesanan.php?id=<?php echo $r['id']; ?>">Detail</a>
+    const tbody = document.getElementById('pesanan-body');
+    tbody.innerHTML = '';
 
-    <?php if ($_SESSION['admin']['role'] === 'kasir' && $r['status'] === 'diantar'): ?>
-      | <a class="btn" href="bayar.php?id=<?php echo $r['id']; ?>">Bayar</a>
-    <?php endif; ?>
-  </td>
-</tr>
-<?php } ?>
+    data.forEach(p => {
 
+      let aksi = `
+        <a href="detail_pesanan.php?id=${p.id}">Detail</a>
+      `;
+
+      // tombol bayar hanya untuk kasir & status diantar
+      <?php if ($_SESSION['admin']['role'] === 'kasir'): ?>
+        if (p.status === 'diantar') {
+          aksi += ` | <a class="btn" href="bayar.php?id=${p.id}">Bayar</a>`;
+        }
+      <?php endif; ?>
+
+      tbody.innerHTML += `
+        <tr>
+          <td>${p.kode}</td>
+          <td>${p.nama_pemesan}</td>
+          <td>Rp ${Number(p.total_harga).toLocaleString('id-ID')}</td>
+          <td>${p.status}</td>
+          <td>${aksi}</td>
+        </tr>
+      `;
+    });
+
+  } catch (err) {
+    console.error('Gagal load pesanan', err);
+  }
+}
+
+// load awal
+loadPesanan();
+
+// polling tiap 12 detik 
+setInterval(loadPesanan, 12000);
+</script>
+  </tbody>
 </table>
+
 
 </main>
 </body>

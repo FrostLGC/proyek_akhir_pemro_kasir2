@@ -81,10 +81,10 @@ function labelStatus($s){
     <p><strong>Meja:</strong> <?= htmlspecialchars($pesanan['meja']) ?></p>
   <?php endif; ?>
 
-  <p>
-    <strong>Status:</strong>
-    <?= labelStatus($pesanan['status']) ?>
-  </p>
+<p>
+  <strong>Status:</strong>
+  <span id="status-text"><?= labelStatus($pesanan['status']) ?></span>
+</p>
 
   <p>
     <strong>Total:</strong>
@@ -113,6 +113,23 @@ function labelStatus($s){
 <p>
   <a href="index.php">Kembali ke Home</a>
 </p>
+
+<script>
+const kode = "<?= htmlspecialchars($kode) ?>";
+
+if (kode) {
+  setInterval(() => {
+    fetch("../api/status_api.php?kode=" + kode)
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) return;
+
+        document.querySelector("#status-text").innerText =
+          data.pesanan.status;
+      });
+  }, 10000);
+}
+</script>
 
 </main>
 </body>

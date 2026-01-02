@@ -27,6 +27,7 @@
       <?php if (isset($_SESSION['customer'])): ?>
         <a href="riwayat_pesanan.php">Riwayat</a>
       <?php endif; ?>
+      <a href="status.php">Cek Status Pesanan</a>
     </nav>
   </header>
 

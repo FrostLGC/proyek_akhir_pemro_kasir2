@@ -34,7 +34,7 @@ $pesanan = mysqli_query($conn,
 <body>
 
 <header>
-  <h2>Cafe AHMF - Waiter</h2>
+  <h2>Pesanan Siap Diantarr</h2>
   <nav>
     <a href="dashboard.php">Dashboard</a>
     <a href="logout.php">Logout</a>
@@ -46,29 +46,72 @@ $pesanan = mysqli_query($conn,
 <h2>Pesanan Siap Diantar</h2>
 
 <table>
-<tr>
-  <th>Kode</th>
-  <th>Nama</th>
-  <th>Meja</th>
-  <th>Status</th>
-  <th>Detail</th>
-  <th>Aksi</th>
-</tr>
+  <thead>
+    <tr>
+      <th>Kode</th>
+      <th>Nama</th>
+      <th>Meja</th>
+      <th>Status</th>
+      <th>Detail</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody id="waiter-body">
+    <script>
+async function loadWaiter() {
+  try {
+    const res = await fetch('../api/waiter_api.php');
+    const data = await res.json();
 
-<?php while($p = mysqli_fetch_assoc($pesanan)){ ?>
-<tr>
-  <td><?php echo $p['kode']; ?></td>
-  <td><?php echo htmlspecialchars($p['nama_pemesan']); ?></td>
-  <td><?php echo $p['meja'] ?: '-'; ?></td>
-  <td><?php echo ucfirst($p['status']); ?></td>
-  <td><a href="detail_pesanan.php?id=<?php echo $p['id']; ?>">Lihat</a></td>
-  <td>
-    <a class="btn" href="?id=<?php echo $p['id']; ?>">Antar</a>
-  </td>
-</tr>
-<?php } ?>
+    const tbody = document.getElementById('waiter-body');
+    tbody.innerHTML = '';
 
+    data.forEach(p => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${p.kode}</td>
+          <td>${p.nama_pemesan}</td>
+          <td>${p.meja ?? '-'}</td>
+          <td>${p.status}</td>
+          <td>
+            <a href="detail_pesanan.php?id=${p.id}">Lihat</a>
+          </td>
+          <td>
+            <button class="btn" onclick="antar(${p.id})">
+              Antar
+            </button>
+          </td>
+        </tr>
+      `;
+    });
+
+  } catch (err) {
+    console.error('Gagal load waiter', err);
+  }
+}
+
+async function antar(id) {
+  if (!confirm('Pesanan sudah diantar?')) return;
+
+  await fetch('../api/waiter_update.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'id=' + id
+  });
+
+  loadWaiter(); // refresh data tanpa reload halaman
+}
+
+// load awal
+loadWaiter();
+
+// polling tiap 12 detik
+setInterval(loadWaiter, 12000);
+</script>
+
+  </tbody>
 </table>
+
 
 </main>
 </body>
