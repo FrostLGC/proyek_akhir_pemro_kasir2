@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/config/database.php';
 
 $menu_id = intval($_POST['menu_id']);
 $jumlah  = max(1, intval($_POST['jumlah']));

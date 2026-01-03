@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/config/database.php';
 
 if (isset($_SESSION['admin'])) {
-    header('Location: ../admin/dashboard.php');
+    header('Location: admin/dashboard.php');
     exit;
 }
 ?>
@@ -14,7 +14,7 @@ if (isset($_SESSION['admin'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cafe AHMF</title>
-    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <header>
@@ -56,7 +56,7 @@ if (isset($_SESSION['admin'])) {
         </div>
           <div class="hero-image">
     <div class="hero-box">
-      <img src="../assets/gambar_toko/logocafe.png" alt="Menu Cafe">
+      <img src="assets/gambar_toko/logocafe.png" alt="Menu Cafe">
     </div>
   </div>
     </section>

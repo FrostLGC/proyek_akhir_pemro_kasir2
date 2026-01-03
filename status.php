@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/config/database.php';
 
 $kode = isset($_GET['kode'])
     ? mysqli_real_escape_string($conn, $_GET['kode'])
@@ -45,7 +45,7 @@ function labelStatus($s){
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Status Pesanan</title>
-  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 
 <body>
@@ -111,7 +111,7 @@ function labelStatus($s){
 <?php endif; ?>
 
 <p>
-  <a href="index.php">Kembali ke Home</a>
+  <a href="menu.php">Kembali ke Menu</a>
 </p>
 
 <script>
@@ -119,7 +119,7 @@ const kode = "<?= htmlspecialchars($kode) ?>";
 
 if (kode) {
   setInterval(() => {
-    fetch("../api/status_api.php?kode=" + kode)
+    fetch("api/status_api.php?kode=" + kode)
       .then(res => res.json())
       .then(data => {
         if (data.error) return;

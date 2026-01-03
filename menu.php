@@ -1,6 +1,6 @@
   <?php
   session_start();
-  require_once __DIR__ . '/../config/database.php';
+  require_once __DIR__ . '/config/database.php';
 
   $sql = "SELECT m.*, k.nama AS kategori
           FROM menu m
@@ -15,7 +15,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu</title>
-    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="assets/style.css">
   </head>
   <body>
 
@@ -54,7 +54,7 @@
         <article class="card">
           <div class="card-image">
             <?php if ($row['foto']): ?>
-              <img src="../uploads/gambar_menu/<?= htmlspecialchars($row['foto']) ?>" alt="<?= htmlspecialchars($row['nama_menu']) ?>">
+              <img src="uploads/gambar_menu/<?= htmlspecialchars($row['foto']) ?>" alt="<?= htmlspecialchars($row['nama_menu']) ?>">
             <?php else: ?>
               <div class="noimg">
                 <p>No Image</p>

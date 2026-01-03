@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/config/database.php';
 
 $cart = $_SESSION['cart'] ?? [];
 $total = 0;
@@ -13,7 +13,7 @@ foreach ($cart as $c) $total += $c['subtotal'];
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Keranjang</title>
-  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 
 <body>
@@ -47,7 +47,7 @@ foreach ($cart as $c) $total += $c['subtotal'];
     <td>Rp <?= number_format($item['harga'],0,',','.') ?></td>
 
     <td style="text-align:center;">
-      <a href="update_keranjang.php?index=<?= $index ?>&aksi=kurang">−</a>
+      <a href="update_keranjang.php?index=<?= $index ?>&aksi=kurang">-</a>
       <strong><?= $item['jumlah'] ?></strong>
       <a href="update_keranjang.php?index=<?= $index ?>&aksi=tambah">+</a>
     </td>
