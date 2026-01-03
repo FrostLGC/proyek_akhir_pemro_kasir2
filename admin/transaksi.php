@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../config/database.php';
-if (!isset($_SESSION['admin'])) { header('Location: ../public/login.php'); exit; }
+if (!isset($_SESSION['admin'])) { header('Location: ../login.php'); exit; }
 $q = mysqli_query($conn, "SELECT t.*, p.kode FROM transaksi t JOIN pesanan p ON t.pesanan_id=p.id ORDER BY t.created_at DESC");
 ?>
 

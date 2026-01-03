@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config/database.php';
 
 // auth
 if (!isset($_SESSION['admin'])) {
-    header('Location: ../public/login.php');
+    header('Location: ../login.php');
     exit;
 }
 
